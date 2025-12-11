@@ -2,7 +2,20 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Dict, Any
+import os
+import json
+import time
+import logging
+from .features import FeatureExtractor
+from .agent import StressManagementAgent
+from . import utils
+from . import config
 
+# Configure Logging
+logger = logging.getLogger("StressTrackerAnalysis")
+logging.basicConfig(level=logging.INFO)
+
+# --- FastAPI Setup ---
 app = FastAPI(title="Stress Mouse Tracker API")
 
 app.add_middleware(
@@ -12,10 +25,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-@app.get("/")
-def read_root():
-    return {"status": "ok", "message": "Stress Mouse Tracker API is running"}
 
 class MouseData(BaseModel):
     x: float
@@ -28,32 +37,17 @@ class SessionData(BaseModel):
     keystrokes: List[Dict[str, Any]] = []
     analyze_with_llm: bool = False
 
-import os
-import json
-import time
-import requests
-import logging
-
-# Configure Logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("StressTrackerAPI")
-
-DATA_DIR = "data"
-if not os.path.exists(DATA_DIR):
-    os.makedirs(DATA_DIR)
-    logger.info(f"Created data directory at {DATA_DIR}")
-
-from .features import FeatureExtractor
-from .agent import StressManagementAgent
-from . import utils
-
-# Initialize Agent
+# --- Core Logic Initialization ---
 logger.info("Initializing StressManagementAgent...")
-stress_agent = StressManagementAgent(model_name="llama3.2")
-logger.info("Agent initialized.")
+try:
+    stress_agent = StressManagementAgent(model_name=config.OLLAMA_MODEL)
+    logger.info("Agent initialized.")
+except Exception as e:
+    logger.error(f"Failed to initialize AI Agent: {e}")
+    stress_agent = None
 
-@app.post("/calibrate")
-def calibrate_session(data: SessionData):
+# --- Shared Logic Functions ---
+def calibrate_session_logic(data: SessionData):
     """
     Saves the current session as the 'Baseline' for this user.
     """
@@ -76,10 +70,9 @@ def calibrate_session(data: SessionData):
     return {"status": "calibrated", "baseline": baseline}
 
 
-@app.post("/submit-session")
-def submit_session(data: SessionData):
+def submit_session_logic(data: SessionData):
     session_id = str(int(time.time()))
-    filename = os.path.join(DATA_DIR, f"session_{session_id}.json")
+    filename = os.path.join(config.DATA_DIR, f"session_{session_id}.json")
     
     # Dump raw data
     with open(filename, "w") as f:
@@ -108,28 +101,20 @@ def submit_session(data: SessionData):
     if baseline:
         z_scores = utils.calculate_z_scores(current_features, baseline)
         
-        # Calculate Stress Score based on Z-Scores (Sigmoid-like)
-        # High positive Z on Jitter/Velocity/FlightVariance = Stress
-        # High negative Z on Velocity = Fatigue
-        
-        # Simple weighted sum for score
+        # Calculate Stress Score based on Z-Scores
         z_sum = 0.0
         weights = {
-            'z_mouse_acc_std': 0.3, # Jitter -> Anxiety
-            'z_key_flight_std': 0.4, # Cognitive Load
-            'z_mouse_path_efficiency': 0.3, # Hesitation (if efficiency is low/high)
+            'z_mouse_acc_std': 0.3, 
+            'z_key_flight_std': 0.4, 
+            'z_mouse_path_efficiency': 0.3, 
             'z_mouse_click_latency': 0.2
         }
         
         for k, w in weights.items():
             val = z_scores.get(k, 0)
-            # Efficiency: Higher (Jitter) means Z is positive. 
-            # If Z matches "Stress Direction", add to score.
-            # Efficiency > 1.0 (baseline) often means Jitter. 
             z_sum += val * w
             
         # Sigmoid to map Z-sum to 0.0-1.0
-        # z_sum=0 -> 0.5. z_sum=2 -> ~0.88. z_sum=-2 -> ~0.12
         import math
         stress_score = 1 / (1 + math.exp(-z_sum))
         
@@ -147,9 +132,15 @@ def submit_session(data: SessionData):
     
     llm_analysis = {}
     if data.analyze_with_llm:
-        # Pass Z-scores to Agent
-        analysis_input = {**current_features, **z_scores}
-        llm_analysis = stress_agent.analyze_session(analysis_input, stress_score)
+        if stress_agent:
+            # Pass Z-scores to Agent
+            analysis_input = {**current_features, **z_scores}
+            llm_analysis = stress_agent.analyze_session(analysis_input, stress_score)
+        else:
+            llm_analysis = {
+                "stress_level": stress_score,
+                "clinical_assessment": "AI Agent unavailable. Please check Ollama installation.",
+            }
 
     return {
         "status": "received", 
@@ -160,3 +151,17 @@ def submit_session(data: SessionData):
         "stress_score": stress_score,
         "llm_analysis": llm_analysis
     }
+
+# --- API Routes ---
+
+@app.get("/")
+def read_root():
+    return {"status": "ok", "message": "Stress Mouse Tracker API is running"}
+
+@app.post("/calibrate")
+def calibrate_endpoint(data: SessionData):
+    return calibrate_session_logic(data)
+
+@app.post("/submit-session")
+def submit_session_endpoint(data: SessionData):
+    return submit_session_logic(data)

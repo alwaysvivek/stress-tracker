@@ -8,12 +8,20 @@ from pydantic import BaseModel
 from typing import List, Dict, Any
 from pynput import mouse, keyboard
 
+from core import config
+
 # Configuration
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler(os.path.join(config.LOG_DIR, config.LOG_FILE)),
+        logging.StreamHandler()
+    ]
+)
 logger = logging.getLogger(__name__)
 
-BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:8000/submit-session")
-SESSION_DURATION = 60  # seconds
+SESSION_DURATION = config.SESSION_DURATION
 
 class MouseData(BaseModel):
     x: float

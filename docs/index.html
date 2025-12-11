@@ -1,220 +1,232 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>How It Works - StressTracker AI</title>
+    <title>StressTracker AI - Methodology</title>
     <style>
         :root {
             --bg-color: #0f172a;
+            --text-color: #e2e8f0;
+            --accent-color: #38bdf8;
+            --secondary-color: #94a3b8;
             --card-bg: #1e293b;
-            --accent: #38bdf8;
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --success: #4ade80;
-            --warning: #facc15;
-            --danger: #f43f5e;
+            --border-color: #334155;
+            --code-bg: #0f172a;
         }
 
         body {
-            margin: 0;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
             background-color: var(--bg-color);
-            color: var(--text-primary);
+            color: var(--text-color);
             line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
         }
 
         header {
-            background: linear-gradient(to right, #0f172a, #1e293b);
-            padding: 4rem 2rem;
-            text-align: center;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 4rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 2rem;
         }
 
         h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            background: linear-gradient(120deg, var(--accent), #a78bfa);
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, #38bdf8, #818cf8);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .subtitle {
-            font-size: 1.25rem;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto;
+        h2 {
+            font-size: 1.8rem;
+            color: var(--accent-color);
+            margin-top: 3rem;
+            margin-bottom: 1rem;
         }
 
-        main {
-            max-width: 1000px;
-            margin: 4rem auto;
-            padding: 0 2rem;
+        h3 {
+            font-size: 1.4rem;
+            color: #fff;
+            margin-top: 2rem;
         }
 
-        .section-title {
-            text-align: center;
-            font-size: 2rem;
-            margin-bottom: 3rem;
-            color: var(--text-primary);
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 4rem;
+        p {
+            margin-bottom: 1.5rem;
+            color: var(--secondary-color);
         }
 
         .card {
             background: var(--card-bg);
-            border-radius: 16px;
-            padding: 2rem;
-            border: 1px solid rgba(255,255,255,0.05);
-            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            border-color: rgba(56, 189, 248, 0.3);
+        code {
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9em;
+            color: #f472b6;
         }
 
-        .icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            display: inline-block;
-        }
-
-        h3 {
-            margin-top: 0;
-            font-size: 1.5rem;
-            color: var(--text-primary);
-        }
-
-        p {
-            color: var(--text-secondary);
-        }
-
-        .diagram {
-            background: var(--card-bg);
-            padding: 2rem;
-            border-radius: 16px;
-            text-align: center;
-            margin: 4rem 0;
-        }
-
-        .step {
-            display: inline-block;
-            background: rgba(255,255,255,0.05);
-            padding: 1rem 2rem;
+        pre {
+            background: var(--code-bg);
+            padding: 1rem;
             border-radius: 8px;
-            margin: 0.5rem;
-            font-weight: bold;
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
         }
 
-        .arrow {
-            display: inline-block;
-            margin: 0 1rem;
-            color: var(--accent);
-            font-size: 1.5rem;
+        ul {
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        .math-block {
+            background: var(--code-bg);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            margin: 1rem 0;
+            border-left: 4px solid var(--accent-color);
         }
 
         footer {
-            text-align: center;
-            padding: 2rem;
-            color: var(--text-secondary);
-            border-top: 1px solid rgba(255,255,255,0.05);
             margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            color: var(--secondary-color);
+            font-size: 0.9rem;
         }
 
-        .btn {
-            display: inline-block;
-            background: var(--accent);
-            color: #000;
-            padding: 0.75rem 2rem;
-            border-radius: 9999px;
+        a {
+            color: var(--accent-color);
             text-decoration: none;
-            font-weight: bold;
-            margin-top: 2rem;
-            transition: opacity 0.2s;
         }
 
-        .btn:hover {
-            opacity: 0.9;
+        a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
+
 <body>
+    <div class="container">
+        <header>
+            <h1>StressTracker AI Methodology</h1>
+            <p>Technical deep dive into digital phenotyping and stress inference algorithms.</p>
+        </header>
 
-    <header>
-        <h1>StressTracker AI</h1>
-        <p class="subtitle">Understanding the science behind your digital biomarkers.</p>
-        <a href="https://github.com/yourusername/stresstracker" class="btn">View on GitHub</a>
-    </header>
+        <section id="introduction">
+            <h2>1. Introduction</h2>
+            <p>StressTracker AI leverages <strong>Digital Phenotyping</strong>—interpreted here as the moment-to-moment
+                quantification of individual-level human phenotype in situ using data from personal digital devices. The
+                core hypothesis is that acute stress and high cognitive load manifest in sub-conscious motor control
+                mechanisms.</p>
+            <p>As per the <em>Yerkes-Dodson law</em>, performance increases with physiological or mental arousal, but
+                only up to a point. Beyond that point (distress), fine motor control degrades. This system detects that
+                degradation.</p>
+        </section>
 
-    <main>
-        <h2 class="section-title">🔬 The Science of Digital Phenotyping</h2>
-        
-        <div class="grid">
+        <section id="data-collection">
+            <h2>2. Data Collection (Privacy-First)</h2>
+            <p>The system uses <code>pynput</code> to install global hooks on the host operating system. This allows it
+                to capture input events even when the application is in the background.</p>
             <div class="card">
-                <span class="icon">🖱️</span>
-                <h3>Kinematic Analysis</h3>
-                <p>We analyze your mouse movements for <strong>jitter</strong> and <strong>path efficiency</strong>. High frequency tremors or inefficient, curved paths often correlate with Sympathetic Nervous System (SNS) activation—your body's "fight or flight" response.</p>
+                <h3>Privacy Guarantee</h3>
+                <p><strong>No raw content is logged.</strong> The system strictly collects timestamped metadata (e.g.,
+                    "Key Down at T=12345", "Mouse moved to X,Y") used for feature extraction. The raw key codes are
+                    discarded immediately after feature extraction (except for non-alphanumeric keys like Backspace
+                    needed for error rate calculations).</p>
             </div>
-            
-            <div class="card">
-                <span class="icon">⌨️</span>
-                <h3>Keystroke Dynamics</h3>
-                <p>We measure <strong>Flight Time Variability</strong> (the consistency of time between key presses). According to <em>Epp et al. (2011)</em>, variances in typing rhythm are a strong proxy for cognitive load and mental fatigue.</p>
-            </div>
-            
-            <div class="card">
-                <span class="icon">🧠</span>
-                <h3>Psychomotor Hesitation</h3>
-                <p>By tracking <strong>Click Latency</strong> (time between stopping the mouse and clicking), we can detect "choking" or hesitation, often a sign of high performance anxiety or decision paralysis.</p>
-            </div>
-        </div>
+        </section>
 
-        <h2 class="section-title">⚙️ How It Works Under the Hood</h2>
+        <section id="feature-engineering">
+            <h2>3. Feature Engineering</h2>
 
-        <div class="diagram">
-            <div class="step">1. Calibration</div>
-            <div class="arrow">→</div>
-            <div class="step">2. Z-Score Analysis</div>
-            <div class="arrow">→</div>
-            <div class="step">3. AI Agent</div>
-        </div>
+            <h3>3.1 Keystroke Dynamics</h3>
+            <p>We analyze the temporal patterns of typing to infer cognitive load.</p>
+            <ul>
+                <li><strong>Flight Time</strong>: The time interval between releasing one key and pressing the next.
+                    <div class="math-block">Flight = T_down(n) - T_up(n-1)</div>
+                    <p><em>Significance:</em> High variance in flight time suggests cognitive hesitation or "thinking
+                        breaks" (Epp et al., 2011).</p>
+                </li>
+                <li><strong>Dwell Time</strong>: The duration a key is held down.
+                    <div class="math-block">Dwell = T_up(n) - T_down(n)</div>
+                    <p><em>Significance:</em> Longer dwell times correlate with fatigue or lower alertness.</p>
+                </li>
+                <li><strong>error_rate</strong>: The ratio of functional keys (Backspace, Delete) to total keystrokes.
+                    <p><em>Significance:</em> Correlates with frustration and loss of concentration.</p>
+                </li>
+            </ul>
 
-        <div class="grid">
-             <div class="card">
-                <h3>1. Calibration (The Baseline)</h3>
-                <p>Everyone is different. First, we record a 60-second "normal" work session. This establishes your personal baseline for speed, accuracy, and movement patterns.</p>
-            </div>
-            
-            <div class="card">
-                <h3>2. Z-Score Deviation</h3>
-                <p>During live tracking, we compare current metrics to your baseline using <strong>Z-Scores</strong> (standard deviations). A Z-Score > +1.5 indicates a significant deviation (e.g., significantly more jittery than usual).</p>
-            </div>
+            <h3>3.2 Mouse Kinematics</h3>
+            <p>Mouse behavior offers a window into the sympathetic nervous system state.</p>
+            <ul>
+                <li><strong>Jitter (Acceleration Variance)</strong>:
+                    <p>We calculate the standard deviation of the acceleration vector magnitudes. Under stress, muscles
+                        tense, leading to micro-tremors or "jitter" in cursor movement.</p>
+                </li>
+                <li><strong>Path Efficiency (Tortuosity)</strong>:
+                    <div class="math-block">Efficiency = Actual Distance / Euclidean Distance</div>
+                    <p><em>Significance:</em> Ideally, a movement from A to B is a straight line (Ratio = 1.0). As
+                        cognitive load increases, movements become less direct and more curved (Ratio > 1.0).</p>
+                </li>
+                <li><strong>Click Latency</strong>:
+                    <p>The time elapsed between the cursor stopping (velocity -> 0) and a click event occurring. High
+                        latency indicates "choking" or hesitation in decision making.</p>
+                </li>
+            </ul>
+        </section>
 
-            <div class="card">
-                <h3>3. Clinical Agent (Llama 3.2)</h3>
-                <p>We feed these Z-Scores into a local LLM agent acting as a Clinical Psychiatrist. It analyzes the <em>combination</em> of signals (e.g., Slow Typing + High Jitter) to distinguish between <strong>Fatigue</strong> vs. <strong>Anxiety</strong>.</p>
-            </div>
-        </div>
+        <section id="stress-quantification">
+            <h2>4. Stress Quantification</h2>
+            <p>The system uses a comparative Z-Score model against a personalized baseline.</p>
 
-        <h2 class="section-title">🔒 Privacy by Design</h2>
-        <div class="card" style="text-align: center; max-width: 600px; margin: 0 auto;">
-            <span class="icon">🛡️</span>
-            <h3>Local-First Architecture</h3>
-            <p>Your keystrokes and mouse movements never leave your machine. The AI runs locally using Ollama. No cloud, no tracking pixels, just pure Python running on your localhost.</p>
-        </div>
+            <h3>4.1 Baseline Calibration</h3>
+            <p>During a "Calibration Phase," the user works normally for 60 seconds. We record the mean ($\mu$) and
+                standard deviation ($\sigma$) for all metrics. This establishes the user's "Neutral" state.</p>
 
-    </main>
+            <h3>4.2 Z-Score Calculation</h3>
+            <p>For every live session, we calculate the Z-Score for each feature $i$:</p>
+            <div class="math-block">Z_i = (CurrentValue_i - \mu_i) / \sigma_i</div>
+            <p>A $Z > 1.5$ indicates the current metric is significantly higher than baseline (93rd percentile
+                deviation).</p>
 
-    <footer>
-        <p>&copy; 2026 StressTracker AI. Open Source Digital Health.</p>
-    </footer>
+            <h3>4.3 Composite Stress Score</h3>
+            <p>We compute a weighted sum of the Z-Scores to derive a raw stress magnitude:</p>
+            <div class="math-block">Z_{sum} = \sum (Z_i \times Weight_i)</div>
+            <p>Weights are assigned based on feature reliability (e.g., Flight Time Variance: 0.4, Mouse Jitter: 0.3).
+            </p>
+            <p>Finally, we map this to a 0-100% scale using a Sigmoid function:</p>
+            <div class="math-block">Stress\% = \frac{1}{1 + e^{-Z_{sum}}}</div>
+        </section>
 
+        <footer>
+            <p>StressTracker AI Project Documentation</p>
+        </footer>
+    </div>
 </body>
+
 </html>

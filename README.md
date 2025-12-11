@@ -9,6 +9,11 @@
 
 **StressTracker AI** is a privacy-focused, local-first application that analyzes your digital biomarkers (mouse movements, keystroke dynamics) to detect stress and cognitive load in real-time.
 
+![StressTracker Demo](docs/demo.webp)
+
+> 📘 **Technical Deep Dive**: Curious about the math? Check out the [Methodology & Signal Processing Docs](docs/index.html).
+
+
 ---
 
 ## ✨ Features
@@ -47,6 +52,61 @@ python start.py
 ```
 
 That's it! The app will open in your browser.
+
+---
+
+
+## 🏗️ Architecture
+
+How the pieces fit together:
+
+```mermaid
+graph TD
+    User[User Input] -->|Hooks| Listener[pynput Listener]
+    Listener -->|Events| Tracker[core.tracker.BackgroundTracker]
+    Tracker -->|Raw Data| Memory[In-Memory Buffer]
+    
+    Memory -->|Micro-Batch| Extractor[core.features.FeatureExtractor]
+    Extractor -->|Features| Analysis[core.analysis.submit_session]
+    
+    Analysis -->|Z-Scores| Agent[core.agent.StressManagementAgent]
+    Agent -->|LLM Inference| Ollama[Ollama (Llama 3.2)]
+    
+    Analysis -->|Results| UI[Streamlit Frontend]
+    Agent -->|Advice| UI
+```
+
+---
+
+## 🔧 Troubleshooting
+
+### 1. "Ollama not found"
+The app requires Ollama to be installed and running.
+*   **Fix**: Install from [ollama.com](https://ollama.com).
+*   **Verify**: Run `ollama list` in your terminal. You should see `llama3.2`.
+
+### 2. "Input monitoring permission denied" (macOS)
+macOS requires explicit permission for apps to monitor keystrokes.
+*   **The Checkmark Lie**: Even if PyCharm is checked in System Settings, macOS often ignores it after an update or app restart.
+*   **The Fix**:
+    1.  Go to **System Settings > Privacy & Security > Input Monitoring**.
+    2.  Select `PyCharm` and **click the minus (-)** button to remove it entirely.
+    3.  Run the app again.
+    4.  macOS will prompt you to "Open System Settings". Click it and **Grant Permission** freshly.
+    5.  **Restart PyCharm** (completely quit, not just close window).
+*   **The Nuclear Option** (if above fails):
+    Run this in your terminal to clear the database:
+    ```bash
+    tccutil reset Accessibility
+    ```
+    Then restart your computer.
+
+### 3. "ModuleNotFoundError"
+*   **Fix**: Ensure your virtual environment is active.
+    ```bash
+    source .venv/bin/activate
+    pip install -r requirements.txt
+    ```
 
 ---
 

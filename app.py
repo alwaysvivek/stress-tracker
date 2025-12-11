@@ -10,6 +10,7 @@ from datetime import datetime
 
 from core.tracker import BackgroundTracker
 from core.features import FeatureExtractor
+from core import config
 
 # Page Config
 st.set_page_config(
@@ -79,8 +80,8 @@ with st.sidebar:
     st.title("⚙️ CONFIGURATION")
     duration = st.select_slider(
         "Session Duration",
-        options=[60, 180, 300],
-        value=60,
+        options=[config.SESSION_DURATION, 180, 300],
+        value=config.SESSION_DURATION,
         format_func=lambda x: f"{x//60} min"
     )
     
@@ -97,8 +98,8 @@ with st.sidebar:
     mode = st.radio("Select Mode", ["Live Analysis", "Calibration"], index=0)
     
     if mode == "Calibration":
-        st.warning("Calibration establishes your 'Baseline'. Perform typical tasks (typing + mousing) for 60 seconds.")
-        duration = 60
+        st.warning(f"Calibration establishes your 'Baseline'. Perform typical tasks (typing + mousing) for {config.SESSION_DURATION} seconds.")
+        duration = config.SESSION_DURATION
 
 # Main Interface
 col1, col2 = st.columns([2, 1])
@@ -159,14 +160,14 @@ with col1:
                     # Call Calibrate
                     with st.spinner("Calibrating Baseline..."):
                         s_data = analysis.SessionData(**session_data)
-                        res = analysis.calibrate_session(s_data)
+                        res = analysis.calibrate_session_logic(s_data)
                         st.success("✅ Baseline Established! You can now switch to 'Live Analysis'.")
                         st.json(res['baseline'])
                 else:
                     # Normal Analysis
                     with st.spinner("Analyzing Biometrics with Z-Scoring & Agent..."):
                         s_data = analysis.SessionData(**session_data)
-                        res = analysis.submit_session(s_data)
+                        res = analysis.submit_session_logic(s_data)
                         
                         st.session_state.analysis_result = {
                             "score": res['stress_score'],
@@ -260,10 +261,10 @@ with col1:
             
             # Generate response
             with st.spinner("Thinking..."):
-                from agent import StressManagementAgent
+                from core.agent import StressManagementAgent
                 # We need to re-init agent or use a persistent one (st.cache_resource would be better)
                 if 'agent_instance' not in st.session_state:
-                     st.session_state.agent_instance = StressManagementAgent()
+                     st.session_state.agent_instance = StressManagementAgent(model_name=config.OLLAMA_MODEL)
                 
                 # Context is the analysis text
                 context_str = f"Assessment: {res['analysis'].get('clinical_assessment')}. " \
