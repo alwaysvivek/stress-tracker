@@ -70,7 +70,7 @@ graph TD
     Extractor -->|Features| Analysis[core.analysis.submit_session]
     
     Analysis -->|Z-Scores| Agent[core.agent.StressManagementAgent]
-    Agent -->|LLM Inference| Ollama[Ollama (Llama 3.2)]
+    Agent -->|LLM Inference| Ollama["Ollama (Llama 3.2)"]
     
     Analysis -->|Results| UI[Streamlit Frontend]
     Agent -->|Advice| UI

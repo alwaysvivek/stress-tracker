@@ -133,94 +133,72 @@
 <body>
     <div class="container">
         <header>
-            <h1>StressTracker AI Methodology</h1>
-            <p>Technical deep dive into digital phenotyping and stress inference algorithms.</p>
+            <h1>How It Works</h1>
+            <p>A simple guide to how StressTracker AI understands your stress levels.</p>
         </header>
 
         <section id="introduction">
-            <h2>1. Introduction</h2>
-            <p>StressTracker AI leverages <strong>Digital Phenotyping</strong>—interpreted here as the moment-to-moment
-                quantification of individual-level human phenotype in situ using data from personal digital devices. The
-                core hypothesis is that acute stress and high cognitive load manifest in sub-conscious motor control
-                mechanisms.</p>
-            <p>As per the <em>Yerkes-Dodson law</em>, performance increases with physiological or mental arousal, but
-                only up to a point. Beyond that point (distress), fine motor control degrades. This system detects that
-                degradation.</p>
+            <h2>1. The Big Idea</h2>
+            <p>When we get stressed or tired, our body movements change in subtle ways. We might type with uneven rhythm
+                or move the mouse efficiently. <strong>StressTracker AI</strong> notices these tiny changes to figure
+                out when you need a break.</p>
+            <p>It's based on a simple rule: <strong>When your brain is overloaded, your fine motor skills get slightly
+                    worse.</strong></p>
         </section>
 
         <section id="data-collection">
-            <h2>2. Data Collection (Privacy-First)</h2>
-            <p>The system uses <code>pynput</code> to install global hooks on the host operating system. This allows it
-                to capture input events even when the application is in the background.</p>
+            <h2>2. What We Track (And Your Privacy)</h2>
+            <p>The app listens to your mouse and keyboard activity in the background.</p>
             <div class="card">
-                <h3>Privacy Guarantee</h3>
-                <p><strong>No raw content is logged.</strong> The system strictly collects timestamped metadata (e.g.,
-                    "Key Down at T=12345", "Mouse moved to X,Y") used for feature extraction. The raw key codes are
-                    discarded immediately after feature extraction (except for non-alphanumeric keys like Backspace
-                    needed for error rate calculations).</p>
+                <h3>🔒 Privacy First</h3>
+                <p><strong>We do NOT read what you type.</strong> We don't care about <em>what</em> keys you press (like
+                    passwords or messages). We only measure <em>how</em> you press them (the timing and rhythm). All
+                    data stays on your computer.</p>
             </div>
         </section>
 
         <section id="feature-engineering">
-            <h2>3. Feature Engineering</h2>
+            <h2>3. The Signals We Look For</h2>
 
-            <h3>3.1 Keystroke Dynamics</h3>
-            <p>We analyze the temporal patterns of typing to infer cognitive load.</p>
+            <h3>3.1 Typing Patterns</h3>
+            <p>We look at the rhythm of your typing.</p>
             <ul>
-                <li><strong>Flight Time</strong>: The time interval between releasing one key and pressing the next.
-                    <div class="math-block">Flight = T_down(n) - T_up(n-1)</div>
-                    <p><em>Significance:</em> High variance in flight time suggests cognitive hesitation or "thinking
-                        breaks" (Epp et al., 2011).</p>
-                </li>
-                <li><strong>Dwell Time</strong>: The duration a key is held down.
-                    <div class="math-block">Dwell = T_up(n) - T_down(n)</div>
-                    <p><em>Significance:</em> Longer dwell times correlate with fatigue or lower alertness.</p>
-                </li>
-                <li><strong>error_rate</strong>: The ratio of functional keys (Backspace, Delete) to total keystrokes.
-                    <p><em>Significance:</em> Correlates with frustration and loss of concentration.</p>
-                </li>
+                <li><strong>Hesitation (Flight Time)</strong>: How long you pause between keys. If you start pausing
+                    irregularly, it often means you're thinking hard or struggling to focus.</li>
+                <li><strong>Hold Time (Dwell Time)</strong>: How long you hold a key down. Longer holds can mean you're
+                    tired.</li>
+                <li><strong>Mistakes</strong>: Using the Backspace or Delete key frequently suggests frustration or loss
+                    of focus.</li>
             </ul>
 
-            <h3>3.2 Mouse Kinematics</h3>
-            <p>Mouse behavior offers a window into the sympathetic nervous system state.</p>
+            <h3>3.2 Mouse Patterns</h3>
+            <p>Your mouse movements can show if you are tense.</p>
             <ul>
-                <li><strong>Jitter (Acceleration Variance)</strong>:
-                    <p>We calculate the standard deviation of the acceleration vector magnitudes. Under stress, muscles
-                        tense, leading to micro-tremors or "jitter" in cursor movement.</p>
-                </li>
-                <li><strong>Path Efficiency (Tortuosity)</strong>:
-                    <div class="math-block">Efficiency = Actual Distance / Euclidean Distance</div>
-                    <p><em>Significance:</em> Ideally, a movement from A to B is a straight line (Ratio = 1.0). As
-                        cognitive load increases, movements become less direct and more curved (Ratio > 1.0).</p>
-                </li>
-                <li><strong>Click Latency</strong>:
-                    <p>The time elapsed between the cursor stopping (velocity -> 0) and a click event occurring. High
-                        latency indicates "choking" or hesitation in decision making.</p>
-                </li>
+                <li><strong>Shaky Hand (Jitter)</strong>: When we are stressed, our muscles can get a bit tense, causing
+                    tiny, almost invisible shakes in the mouse cursor.</li>
+                <li><strong>Winding Paths</strong>: When you're relaxed, you usually move the mouse in a straight line.
+                    When stressed, movements might become more curved or "winding."</li>
+                <li><strong>Slow Clicks</strong>: If you stop moving the mouse but wait a split second before clicking,
+                    it might mean you are hesitating.</li>
             </ul>
         </section>
 
         <section id="stress-quantification">
-            <h2>4. Stress Quantification</h2>
-            <p>The system uses a comparative Z-Score model against a personalized baseline.</p>
+            <h2>4. How We Calculate the Score</h2>
+            <p>Everyone is different, so the app first learns your "normal."</p>
 
-            <h3>4.1 Baseline Calibration</h3>
-            <p>During a "Calibration Phase," the user works normally for 60 seconds. We record the mean ($\mu$) and
-                standard deviation ($\sigma$) for all metrics. This establishes the user's "Neutral" state.</p>
+            <h3>4.1 Finding Your Baseline</h3>
+            <p>When you use the "Calibration" mode, the app watches you work normally for 1 minute. It remembers your
+                typical speed and rhythm.</p>
 
-            <h3>4.2 Z-Score Calculation</h3>
-            <p>For every live session, we calculate the Z-Score for each feature $i$:</p>
-            <div class="math-block">Z_i = (CurrentValue_i - \mu_i) / \sigma_i</div>
-            <p>A $Z > 1.5$ indicates the current metric is significantly higher than baseline (93rd percentile
-                deviation).</p>
-
-            <h3>4.3 Composite Stress Score</h3>
-            <p>We compute a weighted sum of the Z-Scores to derive a raw stress magnitude:</p>
-            <div class="math-block">Z_{sum} = \sum (Z_i \times Weight_i)</div>
-            <p>Weights are assigned based on feature reliability (e.g., Flight Time Variance: 0.4, Mouse Jitter: 0.3).
-            </p>
-            <p>Finally, we map this to a 0-100% scale using a Sigmoid function:</p>
-            <div class="math-block">Stress\% = \frac{1}{1 + e^{-Z_{sum}}}</div>
+            <h3>4.2 The Stress Score</h3>
+            <p>During a live session, the app compares your current behavior to your baseline:</p>
+            <ul>
+                <li>If your movements are similar to your baseline, your stress score stays <strong>Low</strong>.</li>
+                <li>If you are hesitating more, making more errors, or your mouse is shakier than usual, your score goes
+                    <strong>High</strong>.</li>
+            </ul>
+            <p>We combine all these signals into a single number from 0% (Relaxed) to 100% (High Stress).</p>
         </section>
 
         <footer>
