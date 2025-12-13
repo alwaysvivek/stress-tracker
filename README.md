@@ -74,6 +74,7 @@ graph TD
     
     Analysis -->|Results| UI[Streamlit Frontend]
     Agent -->|Advice| UI
+    UI <-->|Chat| Agent
 ```
 
 ---
