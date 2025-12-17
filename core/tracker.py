@@ -1,7 +1,4 @@
 import time
-import json
-import requests
-import threading
 import logging
 import os
 from pydantic import BaseModel
@@ -35,6 +32,8 @@ class SessionData(BaseModel):
 
 class BackgroundTracker:
     def __init__(self):
+        self.key_listener = None
+        self.mouse_listener = None
         self.mouse_data = []
         self.clicks = []
         self.keystrokes = []

@@ -57,8 +57,6 @@ class FeatureExtractor:
         df['dy'] = df['y'].diff().fillna(0)
         df['dist'] = np.sqrt(df['dx']**2 + df['dy']**2)
         
-        actual_dist = df['dist'].sum()
-        
         # Euclidean distance from start to end (simplified - assumes one continuous task)
         # Better: Sum of euclidean distances of 'strokes' if we could segment.
         # For continuous monitoring, this might be noisy. 
@@ -127,8 +125,6 @@ class FeatureExtractor:
         is_raw = 'action' in keystrokes[0]
         
         dwell_times = []
-        flight_times = []
-        timestamps = []
         
         if is_raw:
             # Frontend format: raw 'down' and 'up' events

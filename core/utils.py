@@ -1,7 +1,6 @@
 import json
 import os
-import numpy as np
-from typing import Dict, Any, Optional
+from typing import Dict, Optional
 
 BASELINE_FILE = "data/baseline.json"
 

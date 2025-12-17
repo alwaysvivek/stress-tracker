@@ -1,4 +1,3 @@
-import os
 import sys
 import subprocess
 import venv
@@ -10,13 +9,11 @@ def main():
     
     # 1. Detect/Create Venv
     venv_dir = Path(".venv")
-    created_new = False
     
     if not venv_dir.exists():
         print(f"📦 Creating virtual environment at {venv_dir}...")
         try:
-            venv.create(venv_dir, with_pip=True)
-            created_new = True
+            venv.create(venv_dir, with_pip  =True)
             print("✅ Virtual environment created.")
         except Exception as e:
             print(f"❌ Failed to create venv: {e}")

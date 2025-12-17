@@ -61,10 +61,9 @@ def calibrate_session_logic(data: SessionData):
     mouse_efficiency = FeatureExtractor.extract_mouse_efficiency([m.model_dump() for m in data.movements])
     click_latency = FeatureExtractor.extract_click_latency([m.model_dump() for m in data.movements], data.clicks)
     
-    baseline = {**mouse_feats, **key_feats}
-    baseline['mouse_path_efficiency'] = mouse_efficiency
-    baseline['mouse_click_latency'] = click_latency
-    
+    baseline = {**mouse_feats, **key_feats, 'mouse_path_efficiency': mouse_efficiency,
+                'mouse_click_latency': click_latency}
+
     utils.save_baseline(baseline)
     
     return {"status": "calibrated", "baseline": baseline}

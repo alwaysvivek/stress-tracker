@@ -13,3 +13,7 @@ langchain
 langchain-community
 langchain-ollama
 urllib3<2
+
+pydantic
+langchain-core
+gradio
