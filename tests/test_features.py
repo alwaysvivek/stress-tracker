@@ -1,6 +1,7 @@
 import unittest
-import numpy as np
+
 from core.features import FeatureExtractor
+
 
 class TestFeatureExtractor(unittest.TestCase):
     
