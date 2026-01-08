@@ -2,9 +2,10 @@
 
 > **"Your digital wellbeing, monitored in real-time."**
 
-![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen)
-![Python](https://img.shields.io/badge/Python-3.9%2B-blue)
-![Streamlit](https://img.shields.io/badge/Streamlit-App-red)
+![Python](https://img.shields.io/badge/Python-3.9%2B-blue?style=for-the-badge&logo=python&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)
+![LangChain](https://img.shields.io/badge/LangChain-1C3C3C?style=for-the-badge&logo=langchain&logoColor=white)
+![Ollama](https://img.shields.io/badge/Ollama-Local_AI-333333?style=for-the-badge&logo=ollama&logoColor=white)
 
 **StressTracker AI** is a privacy-focused, local-first application that analyzes your digital biomarkers (mouse movements, keystroke dynamics) to detect stress and cognitive load in real-time.
 
